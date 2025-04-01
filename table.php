@@ -1,17 +1,16 @@
 <?php
-header("Access-Control-Allow-Origin: *"); // Allow requests from any origin
-header("Access-Control-Allow-Methods: POST, GET, OPTIONS"); // Allow only these HTTP methods
-header("Access-Control-Allow-Headers: Content-Type"); // Allow this header
+header("Access-Control-Allow-Origin: *"); //allows requests from any domain
+header("Access-Control-Allow-Methods: POST"); //allows the method post 
 
-// Path to the CSV file
+//get the requested file to read and put it in a suitable format
 $filename = isset($_POST['filename']) ? $_POST['filename'] : '';
 $filename = "{$filename}.csv";
-
+//open it in read
 if (($handle = fopen($filename, 'r')) !== FALSE) {
-    echo "<table border='1'>";
-    while (($data = fgetcsv($handle)) !== FALSE) {
-        echo "<tr>";
-        echo "<td>" . htmlspecialchars($data[0]) . "</td>"; 
+    echo "<table border='1'>"; //set the border of the table
+    while (($data = fgetcsv($handle)) !== FALSE) { // whilst there is data 
+        echo "<tr>"; // display it
+        echo "<td>" . htmlspecialchars($data[0]) . "</td>"; //puts the characters into html equivalent
         echo "<td>" . htmlspecialchars($data[1]) . "</td>"; 
         echo "<td>" . htmlspecialchars($data[2]) . "</td>"; 
         echo "<td>" . htmlspecialchars($data[3]) . "</td>"; 
@@ -19,7 +18,7 @@ if (($handle = fopen($filename, 'r')) !== FALSE) {
     }
     echo "</table>";
     fclose($handle);
-} else {
+} else { //if the file cant be opened
     echo "Error: Could not open the file.";
 }
 ?>
