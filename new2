@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+
+<link rel="stylesheet" href="new1 css.css">
+<h2>Paint file managment</h2>
+<body>
+<link rel="stylesheet" href="new1 css.css">
+	<script>
+		window.onload = function() {
+			const params = new URLSearchParams(window.location.search);
+			if (params.get('status') === 'notfound') {
+				alert("Error: Barcode not found!");
+			} else if (params.get('status') === 'success') {
+				alert("Success: Barcode added to paints.csv!");
+			}
+		}
+		function initial_rb(){
+			const selectedOption = document.querySelector('input[name="Which_Button"]:checked').value;
+
+            // Hide both forms initially
+            document.getElementById('readingbutton').style.display = 'none';
+            document.getElementById('addingbutton').style.display = 'none';
+			document.getElementById('allForm').style.display = 'none';
+            document.getElementById('barcodeForm').style.display = 'none';
+			document.getElementById('finalise').style.display = 'none';
+
+            // Show the relevant form based on the selected option
+            if (selectedOption === '0') {
+                document.getElementById('readingbutton').style.display = 'block';
+            } else if (selectedOption === '1') {
+                document.getElementById('addingbutton').style.display = 'block';
+				document.getElementById('finalise').style.display = 'block';
+            }
+        }
+		function showmessage(){
+			alert("submitted");}
+			
+		function loadCSV() {
+			var filename = document.getElementById("filename").value;
+
+			fetch("http://localhost/myPHP/table.php", {
+				method: "POST",
+				headers: {
+					"Content-Type": "application/x-www-form-urlencoded",
+				},
+				body: "filename=" + encodeURIComponent(filename),
+			})
+			.then(response => response.text())
+			.then(data => {
+				document.getElementById("csvTable").innerHTML = data;
+			})
+			.catch(error => console.error("Error:", error));
+		}
+		function add_rb(){
+			const selectedOption = document.querySelector('input[name="typeofadd"]:checked').value;
+
+            // Hide both forms initially
+            document.getElementById('allForm').style.display = 'none';
+            document.getElementById('barcodeForm').style.display = 'none';
+
+            // Show the relevant form based on the selected option
+            if (selectedOption === '0') {
+                document.getElementById('allForm').style.display = 'block';
+            } else if (selectedOption === '1') {
+                document.getElementById('barcodeForm').style.display = 'block';
+            }
+        }
+		
+	</script>	
+	<form>
+      <input type="radio" id="reading" name="Which_Button" value="0" onclick="initial_rb()">
+      <label for="0">reading</label><br>
+	  <input type="radio" id="adding" name="Which_Button" value="1" onclick="initial_rb()">
+      <label for="1">adding</label><br><br><br>
+    </form>
+	
+	<div id="addingbutton" style="display: none;">
+      <input type="radio" id="add" name="typeofadd" value="0" onclick="add_rb()">
+      <label for="0">add all</label>
+	  <input type="radio" id="barcode" name="typeofadd" value="1" onclick="add_rb()">
+      <label for="1">add barcode</label><br>
+    </div>
+	<form form id="readingbutton" method="POST" style="display: none;" >
+	  <label for="filename" style="display: inline-block; width: 100px;">file name:</label>
+	  <input type="text" id="filename" name="filename" value=""><br>
+	  <button type="button" onclick="loadCSV()" style="font-size: 20px; padding: 40px 60px;">read</button>
+	</form>
+	
+	<div id="csvTable"></div>
+	
+	<form form id="allForm" action="http://localhost/myPHP/send.php" method="POST" style="display: none;">
+	  <label for="company" style="display: inline-block; width: 100px;">company:</label>
+	  <input type="text" id="company" name="company" value=""><br>
+	  
+	  <label for="size" style="display: inline-block; width: 100px;">size :</label>
+	  <input type="text" id="size" name="size" value=""><br>
+	  
+	  <label for="type" style="display: inline-block; width: 100px;">type:</label>
+	  <input type="text" id="type" name="type" value=""><br>
+	  
+	  <label for="barcode" style="display: inline-block; width: 100px;">barcode:</label>
+	  <input type="text" id="barcode" name="barcode" value=""><br><br>
+	  <button onclick="showmessage()" type="submit" value="Submit"style="font-size: 20px; padding: 40px 63px;">add</button>
+	</form>
+	
+	<form form id="barcodeForm" action="http://localhost/myPHP/barcode_add.php" method="POST" style="display: none;">
+	  <label for="barcode" style="display: inline-block; width: 100px;">barcode:</label>
+	  <input type="text" id="barcode" name="barcode" value=""><br>
+	  <button onclick="showmessage()" type="submit" value="Submit"style="font-size: 10px; padding: 15px 15px;">barcode add</button>
+	</form> 
+	<form form id="finalise" action="http://localhost/myPHP/filedump.php" method="POST" style="display: none;">
+	  <button type="submit" value="finalise" style="font-size: 10px; padding: 15px 20px;">finalise</button>
+	</form>
+	<img src="logo.png" alt="dash logo">
+<p id="p1">Dash Paint</p>
+</body>
